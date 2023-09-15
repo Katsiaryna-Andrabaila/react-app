@@ -2,8 +2,7 @@ import { useState } from "react";
 import Counter from "./components/Counter";
 import "./styles/App.css";
 import PostList from "./components/PostList";
-import MyButton from "./components/UI/button/MyButton";
-import MyInput from "./components/UI/input/MyInput";
+import PostForm from "./components/PostForm";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -24,35 +23,13 @@ function App() {
     },
   ]);
 
-  const [post, setPost] = useState({ title: "", description: "" });
-
-  const addNewPost = (e) => {
-    e.preventDefault();
-    const newPost = {
-      id: Date.now(),
-      ...post,
-    };
-    setPosts([...posts, newPost]);
-    setPost({ title: "", description: "" });
+  const createPost = (post) => {
+    setPosts([...posts, post]);
   };
 
   return (
     <div className="App">
-      <form>
-        <MyInput
-          value={post.title}
-          onChange={(e) => setPost({ ...post, title: e.target.value })}
-          type="text"
-          placeholder="Post title"
-        />
-        <MyInput
-          value={post.description}
-          onChange={(e) => setPost({ ...post, description: e.target.value })}
-          type="text"
-          placeholder="Post description"
-        />
-        <MyButton onClick={addNewPost}>Add post</MyButton>
-      </form>
+      <PostForm create={createPost} />
       <PostList posts={posts} />
       <Counter />
     </div>
