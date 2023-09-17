@@ -1,0 +1,8 @@
+.mySelect {
+  border: 2px solid teal;
+  padding: 5px 10px;
+}
+
+.mySelect:hover {
+  cursor: pointer;
+}
