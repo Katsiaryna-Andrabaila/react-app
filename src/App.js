@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Counter from "./components/Counter";
+import { useMemo, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MeSelect";
+import MyInput from "./components/UI/input/MyInput";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -24,6 +24,21 @@ function App() {
     },
   ]);
   const [selectedSort, setSelectedSort] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const sortedPosts = useMemo(() => {
+    return selectedSort
+      ? [...posts].sort((a, b) =>
+          a[selectedSort].localeCompare(b[selectedSort])
+        )
+      : posts;
+  }, [selectedSort, posts]);
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter((el) =>
+      el.title.toLowerCase().includes(searchQuery)
+    );
+  }, [sortedPosts, searchQuery]);
 
   const createPost = (post) => {
     setPosts([...posts, post]);
@@ -34,8 +49,7 @@ function App() {
 
   const sortPosts = (value) => {
     setSelectedSort(value);
-    const postsCopy = [...posts];
-    setPosts(postsCopy.sort((a, b) => a[value].localeCompare(b[value])));
+    setPosts(sortedPosts);
   };
 
   return (
@@ -43,6 +57,12 @@ function App() {
       <PostForm create={createPost} />
       <hr style={{ margin: "15px 0" }} />
       <>
+        <MyInput
+          type="text"
+          placeholder="Seacrh..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <MySelect
           value={selectedSort}
           onChange={sortPosts}
@@ -53,8 +73,8 @@ function App() {
           ]}
         />
       </>
-      {posts.length ? (
-        <PostList remove={removePost} posts={posts} />
+      {sortedAndSearchedPosts.length ? (
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} />
       ) : (
         <h1 style={{ textAlign: "center" }}>Posts not found!</h1>
       )}
