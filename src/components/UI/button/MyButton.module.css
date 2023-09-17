@@ -4,3 +4,7 @@
   background: transparent;
   color: teal;
 }
+
+.myButton:hover {
+  cursor: pointer;
+}
