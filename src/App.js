@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
-import MySelect from "./components/UI/select/MeSelect";
-import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -23,22 +22,19 @@ function App() {
       description: "8 C++ is a programming language",
     },
   ]);
-  const [selectedSort, setSelectedSort] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState({ sort: "", query: "" });
 
   const sortedPosts = useMemo(() => {
-    return selectedSort
-      ? [...posts].sort((a, b) =>
-          a[selectedSort].localeCompare(b[selectedSort])
-        )
+    return filter.sort
+      ? [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))
       : posts;
-  }, [selectedSort, posts]);
+  }, [filter.sort, posts]);
 
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter((el) =>
-      el.title.toLowerCase().includes(searchQuery)
+      el.title.toLowerCase().includes(filter.query)
     );
-  }, [sortedPosts, searchQuery]);
+  }, [sortedPosts, filter.query]);
 
   const createPost = (post) => {
     setPosts([...posts, post]);
@@ -47,32 +43,11 @@ function App() {
   const removePost = (post) =>
     setPosts(posts.filter((item) => item.id !== post.id));
 
-  const sortPosts = (value) => {
-    setSelectedSort(value);
-    setPosts(sortedPosts);
-  };
-
   return (
     <div className="App">
       <PostForm create={createPost} />
       <hr style={{ margin: "15px 0" }} />
-      <>
-        <MyInput
-          type="text"
-          placeholder="Seacrh..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <MySelect
-          value={selectedSort}
-          onChange={sortPosts}
-          defaultValue="Sort by"
-          options={[
-            { value: "title", name: "Title" },
-            { value: "description", name: "Description" },
-          ]}
-        />
-      </>
+      <PostFilter filter={filter} setFilter={setFilter} />
       {sortedAndSearchedPosts.length ? (
         <PostList remove={removePost} posts={sortedAndSearchedPosts} />
       ) : (
