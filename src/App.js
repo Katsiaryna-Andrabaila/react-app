@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles/App.css";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -6,12 +6,14 @@ import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/modal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import { usePosts } from "./hooks/usePosts";
-import { initialPosts } from "./consts/initialPosts";
+import PostService from "./API/PostService";
+import MyLoader from "./components/UI/loader/MyLoader";
 
 function App() {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: "", query: "" });
   const [modal, setModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
@@ -19,6 +21,19 @@ function App() {
     setPosts([...posts, post]);
     setModal(false);
   };
+
+  const fetchPosts = async () => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      const posts = await PostService.getAll();
+      setPosts(posts);
+      setIsLoading(false);
+    }, 500);
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   const removePost = (post) =>
     setPosts(posts.filter((item) => item.id !== post.id));
@@ -33,11 +48,23 @@ function App() {
       </MyModal>
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchedPosts}
-        title="Post list"
-      />
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "50px",
+          }}
+        >
+          <MyLoader />
+        </div>
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title="Post list"
+        />
+      )}
     </div>
   );
 }

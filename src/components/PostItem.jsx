@@ -5,7 +5,7 @@ const PostItem = (props) => {
     <div className="post">
         <div className="post__content">
           <strong>{props.number}. {props.title}</strong>
-          <p>{props.description}</p>
+          <p>{props.body}</p>
         </div>
         <div className="post__btns">
           <MyButton onClick={() => props.remove(props)}>Delete post</MyButton>
