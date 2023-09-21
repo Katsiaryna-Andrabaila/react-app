@@ -11,4 +11,14 @@ export default class PostService {
     });
     return responce;
   }
+
+  static async getPostById(id) {
+    const responce = await axios.get(`${BASE_URL}/${id}`);
+    return responce;
+  }
+
+  static async getCommentsById(id) {
+    const responce = await axios.get(`${BASE_URL}/${id}/comments`);
+    return responce;
+  }
 }
