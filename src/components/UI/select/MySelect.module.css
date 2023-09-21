@@ -1,6 +1,7 @@
 .mySelect {
   border: 2px solid teal;
   padding: 5px 10px;
+  margin-right: 5px;
 }
 
 .mySelect:hover {

@@ -10,6 +10,7 @@ import MyLoader from "../components/UI/loader/MyLoader";
 import { useFetcher } from "../hooks/useFetcher";
 import { getPagesCount } from "../utils/pages";
 import { useObserver } from "../hooks/useObserver";
+import MySelect from "../components/UI/select/MySelect";
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -34,8 +35,8 @@ function Posts() {
   });
 
   useEffect(() => {
-    fetchPosts();
-  }, [page]);
+    fetchPosts(page, limit);
+  }, [page, limit]);
 
   const createPost = (post) => {
     setPosts([...posts, post]);
@@ -55,6 +56,17 @@ function Posts() {
       </MyModal>
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
+      <MySelect
+        value={limit}
+        onChange={(limit) => setLimit(limit)}
+        defaultValue="Elements on page"
+        options={[
+          { value: 5, name: "5" },
+          { value: 10, name: "10" },
+          { value: 25, name: "25" },
+          { value: -1, name: "Show all" },
+        ]}
+      />
       {postError && <h1>Error occured: ${postError}</h1>}
       <PostList
         remove={removePost}
