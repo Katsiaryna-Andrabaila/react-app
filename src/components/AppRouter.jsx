@@ -1,17 +1,13 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import "../styles/App.css";
-import About from "../pages/About";
-import Posts from "../pages/Posts";
-import NotFound from "../pages/NotFound";
-import PostPage from "../pages/PostPage";
+import { routes } from "../router";
 
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<About />} />
-      <Route path="/posts" element={<Posts />} />
-      <Route path="/posts/:id" element={<PostPage />} />
-      <Route path="/404" element={<NotFound />} />
+      {routes.map((el) => (
+        <Route path={el.path} element={el.component} key={el.path} />
+      ))}
       <Route path="/*" element={<Navigate to="/404" replace />} />
     </Routes>
   );
