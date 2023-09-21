@@ -12,6 +12,7 @@ const MyNavbar = () => {
 
   const logout = () => {
     setIsAuth(false);
+    localStorage.removeItem("auth");
   };
 
   return (
@@ -25,7 +26,10 @@ const MyNavbar = () => {
         </NavLink>
       </div>
       {isAuth && (
-        <MyButton onClick={logout} style={{ width: "100px" }}>
+        <MyButton
+          onClick={logout}
+          style={{ width: "100px", marginLeft: "10px" }}
+        >
           Log out
         </MyButton>
       )}
