@@ -1,9 +1,18 @@
 import { NavLink } from "react-router-dom";
+import MyButton from "../button/MyButton";
+import { useContext } from "react";
+import { AuthContext } from "../../../context";
 
 const MyNavbar = () => {
+  const { isAuth, setIsAuth } = useContext(AuthContext);
+
   const setActive = ({ isActive }) => ({
     color: isActive ? "darkred" : "teal",
   });
+
+  const logout = () => {
+    setIsAuth(false);
+  };
 
   return (
     <nav className="navbar">
@@ -15,6 +24,11 @@ const MyNavbar = () => {
           Posts
         </NavLink>
       </div>
+      {isAuth && (
+        <MyButton onClick={logout} style={{ width: "100px" }}>
+          Log out
+        </MyButton>
+      )}
     </nav>
   );
 };
