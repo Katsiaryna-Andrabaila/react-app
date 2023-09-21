@@ -3,9 +3,14 @@ import "../styles/App.css";
 import { privateRoutes, publicRoutes } from "../router";
 import { useContext } from "react";
 import { AuthContext } from "../context";
+import MyLoader from "./UI/loader/MyLoader";
 
 const AppRouter = () => {
-  const { isAuth } = useContext(AuthContext);
+  const { isAuth, isLoading } = useContext(AuthContext);
+
+  if (isLoading) {
+    return <MyLoader />;
+  }
 
   return isAuth ? (
     <Routes>
